@@ -2,6 +2,8 @@ from typing import Optional
 from fastapi import Depends, FastAPI, Header
 from fastapi.security import OAuth2PasswordBearer
 
+import json
+
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -28,6 +30,10 @@ def read_item(item_id: int, q: Optional[str] = None, token: str = Depends(oauth2
 def update_item(item_id: int, item: Item, token: str = Depends(oauth2_scheme)):
     return {"item_name": item.name, "item_id": item_id}
 
-@app.get("/items/")
-async def read_items(token: str = Depends(oauth2_scheme)):
-    return {"token": token}
+@app.get("/items")
+def get_all(token: str = Depends(oauth2_scheme)):
+    data = None
+    with open('data\\netflix_anime.json') as json_file:
+        data = json.load(json_file)
+        
+    return data
