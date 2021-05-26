@@ -3,6 +3,7 @@ from fastapi import Depends, FastAPI, Header
 from fastapi.security import OAuth2PasswordBearer
 
 import json
+import os
 
 from pydantic import BaseModel
 
@@ -33,7 +34,7 @@ def update_item(item_id: int, item: Item, token: str = Depends(oauth2_scheme)):
 @app.get("/items")
 def get_all(token: str = Depends(oauth2_scheme)):
     data = None
-    with open('data\\netflix_anime.json') as json_file:
+    with open(os.path.join('data','netflix_anime.json')) as json_file:
         data = json.load(json_file)
         
     return data
